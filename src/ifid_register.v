@@ -1,5 +1,7 @@
 module ifid_register (
     input wire clk,
+    input wire reset,
+    input wire flush,
     input wire [7:0] addr_in,
     input wire [31:0] instruction_in,
     output reg [7:0] addr_out,
@@ -7,8 +9,14 @@ module ifid_register (
 );
 
 always @(posedge clk)begin
-    addr_out <= addr_in;
-    instruction_out <= instruction_in;
+
+    if(reset == 1'b1 || flush == 1'b1)begin
+        instruction_out <= 32'b0;
+        addr_out <= 8'b0;
+    end else begin
+        instruction_out <= instruction_in;
+        addr_out <= addr_in;
+    end
 end
 
 endmodule
